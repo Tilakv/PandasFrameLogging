@@ -102,36 +102,14 @@ list_seq_start_end = list(zip(lowerIdStart.Seqnummer,lowerIdEnd.Seqnummer))
 
 
 E_F_Delay= pd.DataFrame(columns=["FirstSegTime","LastSegTime"])
-E_F_Delay['FirstSegTime'] = lowerIdStart.Time.tolist()[:-1]
+E_F_Delay['FirstSegTime'] = lowerIdStart.Time.tolist()
 E_F_Delay['LastSegTime'] = lowerIdEnd.Time.tolist()
 E_F_Delay['LastSeqNummer'] = lowerIdEnd.Seqnummer.tolist()
 E_F_Delay['FirstSeqNummer'] = lowerIdStart.Seqnummer.tolist()#[:-1]
 
 
 
-#
-#E_F_Delay['fnumber'] = dataSnd.Fnumber
- 
-
-
-#E_F_Delay['FirstSegmTime'] = lowerIdStart.Time.astype(float)*1000000
-#E_F_Delay['FirstSegmTime'] = lowerIdStart.Time.astype(int)#*1000000
-
-#E_F_Delay['LasttSegmTime'] = lowerIdEnd.Time.astype(float)*1000000
-#E_F_Delay['LasttSegmTime'] = lowerIdEnd.Time.astype(int)#*1000000
-
-
-#
-
-#E_F_Delay['LastSegmTime'] = lowerIdEnd.Time
-
-
-
-
 dataHiddenFrames=dataSndRaw.loc[[a for tpl in zip(lowerIdStart.index,lowerIdEnd.index) for a in range(tpl[0],tpl[1]+1)]]
-
-
-
 
 dataHiddenFramesList= pd.DataFrame(list_frame_start_end, columns = ['FrameStart', 'FrameEnd'])
 
@@ -140,7 +118,6 @@ frameList={ 'Frange':[], 'Seqnummer':[]}
 dataSndRaw.merge(dataRetransSnd,on="Seqnummer").Seqnummer#.drop_duplicates()
 
 
-nullvalue = np.nan
 def extractHiddenFrames():
         for index, row in dataHiddenFramesList.iterrows():
             #frameList['sFrame'].append(dataHiddenFramesList.FrameStart)
@@ -170,12 +147,37 @@ for index,row in dataRetransSnd.iterrows():
             dataRetransSnd['RetxFlag'].iloc[index]=str(item).strip('[]')
             break
 
+
+E_F_Delay["Retxed"]= ""
+prev_index1=-1;
+
 for index, row in  dataRetransSnd.iterrows():
    for index1, row1 in E_F_Delay.iterrows():
        if int(row.RetxFlag.split()[0].strip(',')) == row1.FirstSeqNummer:
-           #print("row1.FirstSeqNummer", row1.FirstSeqNummer)
-           print("retransmitted seq Nr is %12d the last frame seqnumber is %12d at time %12d ",row.Seqnummer,row1.LastSeqNummer, row1.LastSegTime, row.Time )
-           break
+           print("row.time, index1  ", row.Time, index1)
+           E_F_Delay['Retxed'].iloc[index1]= row.Time     
+
+           if (index1 == prev_index1):
+               print("INdex1 equal to last index")
+           prev_index1 = index1
+
+
+
+       else:
+            E_F_Delay['Retxed'].iloc[index1]= row1.LastSegTime
+       
+        
+
+                 
+            
+            
+            
+            
+            
+
+
+            
+           
       
            
        
