@@ -158,7 +158,10 @@ for index, row in  dataRetransSnd.iterrows():
            E_F_Delay['Retxed'].iloc[index1]= row.Time     
 
            if (index1 == prev_index1):
-               print("INdex1 equal to last index")
+               
+               print("INdex1 equal to last index", row.Seqnummer)
+           elif (index1 != prev_index1):
+               print("index1 != prev_index1",prev_index1 )
            prev_index1 = index1
 
 
