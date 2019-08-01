@@ -148,18 +148,22 @@ for index,row in dataRetransSnd.iterrows():
             break
 
 
+
+dataRetransSnd_no_dupl=dataRetransSnd.drop_duplicates(subset='RetxFlag', keep='last')
+
 E_F_Delay["Retxed"]= ""
 prev_index1=-1;
-
-for index, row in  dataRetransSnd.iterrows():
+repeated_Duplicates = {"last_occur":[]}
+prev_index_2 = 0
+for index, row in  dataRetransSnd_no_dupl.iterrows():
    for index1, row1 in E_F_Delay.iterrows():
        if int(row.RetxFlag.split()[0].strip(',')) == row1.FirstSeqNummer:
            print("row.time, index1  ", row.Time, index1)
            E_F_Delay['Retxed'].iloc[index1]= row.Time     
 
            if (index1 == prev_index1):
-               
-               print("INdex1 equal to last index", row.Seqnummer)
+               print("INdex1 equal to last index", row.Seqnummer, index1)
+               #repeated_Duplicates['last_occur'].append(row.Seqnummer)
            elif (index1 != prev_index1):
                print("index1 != prev_index1",prev_index1 )
            prev_index1 = index1
@@ -168,6 +172,8 @@ for index, row in  dataRetransSnd.iterrows():
 
        else:
             E_F_Delay['Retxed'].iloc[index1]= row1.LastSegTime
+
+
        
         
 
